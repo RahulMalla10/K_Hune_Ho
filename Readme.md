@@ -31,6 +31,10 @@ python setup.py
 
 Set up your environment variables based on the template. You can change the model by editing .env after you copy the files.
 
+## Agent Manager
+
+`src/agent_manager.py` contains the `AgentManager` class that initializes the LLM and runs multiple domain-specific reasoning agents against news article data. It loads the local Llama model using configuration values from `src/config.py`, builds prompts for domains such as sentiment, financial, geopolitical, legal, and more, and returns structured JSON prediction output for each domain.
+
 ## Team Git Workflow
 
 When adding your parts to the project, follow these commands exactly:
