@@ -1,0 +1,4 @@
+llama-cpp-python==0.2.77
+duckduckgo-search==6.3.0
+python-dotenv==1.0.1
+gnews==0.2.6
