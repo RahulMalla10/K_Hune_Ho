@@ -39,16 +39,20 @@ Set up your environment variables based on the template. You can change the mode
 
 Windows:
 
+```bash
 python -m venv venv
 venv\Scripts\activate
 pip install -r requirements.txt
 python run.py
+```
 
 Linux and macOS:
 
+```bash
 python -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
 python run.py
+```
 
 If the project requires configuration, create or update the environment variables as needed before running.
