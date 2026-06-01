@@ -35,18 +35,20 @@ Set up your environment variables based on the template. You can change the mode
 
 `src/agent_manager.py` contains the `AgentManager` class that initializes the LLM and runs multiple domain-specific reasoning agents against news article data. It loads the local Llama model using configuration values from `src/config.py`, builds prompts for domains such as sentiment, financial, geopolitical, legal, and more, and returns structured JSON prediction output for each domain.
 
-## Team Git Workflow
+## Setup and Run
 
-When adding your parts to the project, follow these commands exactly:
+Windows:
 
-git checkout main
-git pull origin main
-git checkout -b your-feature-branch
+python -m venv venv
+venv\Scripts\activate
+pip install -r requirements.txt
+python run.py
 
-Add your files:
+Linux and macOS:
 
-git add src/your_file.py
-git commit -m "Implement my assigned feature"
-git push origin your-feature-branch
+python -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+python run.py
 
-Then, go to GitHub, open a Pull Request, and ask someone to review it. Remember to update this README to include documentation for the code you just added!
+If the project requires configuration, create or update the environment variables as needed before running.
