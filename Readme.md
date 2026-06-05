@@ -35,6 +35,18 @@ Set up your environment variables based on the template. You can change the mode
 
 The Agent Manager contains the `AgentManager` class that initializes the LLM and runs multiple domain-specific reasoning agents against news article data. It loads the local Llama model using configuration values from `src/config.py`, builds prompts for domains such as sentiment, financial, geopolitical, legal, and more, and returns structured JSON prediction output for each domain.
 
+## Pipeline Log
+
+The Pipeline Log module (`pipeline_log.py`) provides structured logging utilities for the KHUNEHO analysis pipeline. It enables consistent, timestamped logging throughout the system with status indicators and message formatting. Key functions include:
+
+- `log_banner(topic, *, causal_trace)` - Logs the start of analysis with topic and causal trace status
+- `log_step(step, status, message)` - Logs individual pipeline steps with status icons (active ▶, completed ✓, skipped ○, error ✗)
+- `log_detail(message)` - Logs detailed information with proper indentation
+- `log_done(topic)` - Logs successful completion of analysis
+- `log_failed(step, message)` - Logs analysis failures with step information
+
+All log messages include timestamps in HH:MM:SS format for tracking execution flow.
+
 ## Setup and Run
 
 Windows:
