@@ -2,7 +2,7 @@ from __future__ import annotations
 import re
 from src.config import config
 from src.utils import extract_json_array, extract_json_object, truncate_articles, tokenize
-
+# news tracer uses llm to extract causal chains or linkage
 _GENERIC_CAUSAL_PATTERNS = [
     (r"war|conflict|invasion|military|strike|hostilit|tension|sanction", "Geopolitical conflict or sanctions", "regional instability and market uncertainty"),
     (r"election|vote|parliament|government|policy|regulation|law|bill", "Policy or political decision", "regulatory and market shifts"),
@@ -33,7 +33,7 @@ def _join_items(items: list, sep: str = ", ", limit: int = 12) -> str:
     parts = [_to_str(x) for x in (items or [])[:limit]]
     parts = [p for p in parts if p]
     return sep.join(parts)
-
+# class to trace causal chains for a news topic provided.
 class NewsTracer:
 
     CAUSAL_PROMPT = """You are an expert causal news analyst. Explain WHY the topic outcome is happening, using ONLY the articles below.
@@ -124,7 +124,6 @@ JSON only: {{"entities": [], "events": [], "regions": []}}"""
             body = m.group(2).strip()
             if len(body) < 12:
                 continue
-            # Normalize arrow variants
             body = re.sub(r"\s*->\s*", " → ", body)
             body = re.sub(r"\s*—>\s*", " → ", body)
             if "→" not in body:
