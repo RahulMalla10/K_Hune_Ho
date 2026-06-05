@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>KHUNEHO – News Intelligence</title>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ctext y='24' font-size='24'%3E%E2%9A%A1%3C/text%3E%3C/svg%3E" />
+    <link rel="stylesheet" href="/static/styles.css?v=7" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js"></script>
+  </head>
+  <body>
+    <nav class="navbar">
+      <div class="navbar-container">
+        <div class="navbar-brand">
+          <span class="brand-logo">⚡</span>
+          <h1 class="brand-title">KHUNEHO</h1>
+        </div>
+        <p class="brand-subtitle">Neural News Intelligence</p>
+      </div>
+    </nav>
+
+    <div class="page-shell">
+      <main>
+        <section id="inputPanel" class="panel panel-input">
+          <div class="input-header">
+            <h2>Analyze News Topic</h2>
+            <p class="input-subtitle">Enter a topic to generate domain-separated predictions, causal traces, and source analysis.</p>
+          </div>
+          
+          <textarea id="topicInput" class="topic-input" placeholder="e.g., Global semiconductor shortage impact on European automakers"></textarea>
+          
+          <div class="controls-row">
+            <label class="toggle">
+              <input id="causalCheckbox" type="checkbox" checked />
+              <span>Causal trace</span>
+            </label>
+            <button id="analyzeButton" class="button button-primary">Analyze</button>
+          </div>
+        </section>
+
+        <section id="deviceStatusPanel" class="panel panel-status">
+          <div class="section-header">
+            <h2>Device Usage</h2>
+            <p class="section-subtitle">Live CPU/GPU utilization for the current host.</p>
+          </div>
+          <div class="status-grid">
+            <div class="status-card">
+              <div class="status-card-header">
+                <h3>CPU</h3>
+                <span id="cpuModeLabel" class="status-chip">CPU</span>
+              </div>
+              <div class="status-value" id="cpuPercentText">--%</div>
+              <div class="status-bar"><div id="cpuUsageFill" class="status-bar-fill"></div></div>
+              <div class="status-detail" id="cpuCoresText">Cores: --</div>
+              <div class="cpu-chart-container"><canvas id="cpuChart" class="status-chart"></canvas></div>
+            </div>
+            <div class="status-card">
+              <div class="status-card-header">
+                <h3>GPU</h3>
+                <span id="gpuModeLabel" class="status-chip">--</span>
+              </div>
+              <div class="status-value" id="gpuPercentText">--</div>
+              <div class="status-bar"><div id="gpuUsageFill" class="status-bar-fill"></div></div>
+              <div class="status-detail" id="gpuInfoText">Type: --</div>
+              <div class="gpu-chart-container"><canvas id="gpuChart" class="status-chart"></canvas></div>
+            </div>
+          </div>
+        </section>
+
+        <section id="progressPanel" class="panel panel-progress hidden" aria-live="polite" aria-label="Analysis progress">
+          <div class="progress-header">
+            <div class="progress-header-top">
+              <h2 id="progressTitle" class="progress-title">Analysis in progress</h2>
+              <span id="progressBadge" class="progress-badge progress-badge--idle">Ready</span>
+            </div>
+            <p id="progressStatus" class="progress-status">Preparing analysis…</p>
+            <div class="progress-overall" aria-hidden="true">
+              <div id="progressOverallFill" class="progress-overall-fill"></div>
+            </div>
+          </div>
+          <div class="progress-container">
+            <div class="progress-item pending" data-step="1" role="status">
+              <div class="progress-step">1</div>
+              <div class="progress-label">Fetching news</div>
+              <span class="progress-step-hint">Waiting</span>
+              <div class="progress-bar"><div class="progress-bar-fill"></div></div>
+            </div>
+            <div class="progress-item pending" data-step="2">
+              <div class="progress-step">2</div>
+              <div class="progress-label">Domain routing</div>
+              <span class="progress-step-hint">Waiting</span>
+              <div class="progress-bar"><div class="progress-bar-fill"></div></div>
+            </div>
+            <div class="progress-item pending" data-step="3">
+              <div class="progress-step">3</div>
+              <div class="progress-label">Causal analysis</div>
+              <span class="progress-step-hint">Waiting</span>
+              <div class="progress-bar"><div class="progress-bar-fill"></div></div>
+            </div>
+            <div class="progress-item pending" data-step="4">
+              <div class="progress-step">4</div>
+              <div class="progress-label">Agent predictions</div>
+              <span class="progress-step-hint">Waiting</span>
+              <div class="progress-bar"><div class="progress-bar-fill"></div></div>
+            </div>
+            <div class="progress-item pending" data-step="5">
+              <div class="progress-step">5</div>
+              <div class="progress-label">Finalizing</div>
+              <span class="progress-step-hint">Waiting</span>
+              <div class="progress-bar"><div class="progress-bar-fill"></div></div>
+            </div>
+          </div>
+        </section>
+
+        <div id="resultsRegion" class="results-region hidden">
+        <section id="resultsActionsPanel" class="panel panel-results-actions">
+          <div class="results-actions-inner">
+            <div class="results-actions-copy">
+              <h2 class="results-actions-title">Report ready</h2>
+              <p class="results-actions-subtitle">Preview your report, then download as PDF. Choose the format that fits your needs.</p>
+            </div>
+            <div class="results-actions-buttons">
+              <button type="button" id="downloadCompletePdfButton" class="button button-primary button-pdf">
+                Complete report
+              </button>
+              <button type="button" id="downloadFullReportPdfButton" class="button button-secondary button-pdf" disabled>
+                Full analysis only
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <section id="summaryPanel" class="panel panel-result">
+          <div class="section-header section-header--compact">
+            <h2>Overview</h2>
+            <p class="section-subtitle">Key metrics from this analysis run</p>
+          </div>
+          <div class="summary-grid" id="summaryGrid"></div>
+        </section>
+
+        <section id="causalSection" class="panel panel-result hidden">
+          <div class="section-header">
+            <h2>Causal Trace</h2>
+            <p class="section-subtitle">Ranked root causes explaining the topic outcome</p>
+          </div>
+          <div id="causalContent" class="section-content"></div>
+        </section>
+
+        <section id="domainsSection" class="panel panel-result hidden">
+          <div class="section-header">
+            <h2>Domain Predictions</h2>
+            <p class="section-subtitle">Expert perspectives across 15 analytical domains</p>
+          </div>
+          <div id="domainsContent" class="domains-grid"></div>
+        </section>
+
+        <section id="timelineSection" class="panel panel-result hidden">
+          <div class="section-header">
+            <h2>Timeline</h2>
+            <p class="section-subtitle">News events chronologically ordered</p>
+          </div>
+          <ul id="timelineContent" class="list"></ul>
+        </section>
+
+        <section id="sourcesSection" class="panel panel-result hidden">
+          <div class="section-header">
+            <h2>News Sources</h2>
+            <p class="section-subtitle">Complete source list with citations</p>
+          </div>
+          <ol id="sourcesContent" class="source-list"></ol>
+        </section>
+
+        </div>
+      </main>
+    </div>
+
+    <div id="pdfPreviewModal" class="pdf-modal hidden" role="dialog" aria-modal="true" aria-labelledby="pdfPreviewTitle">
+      <div class="pdf-modal-backdrop" id="pdfPreviewBackdrop" aria-hidden="true"></div>
+      <div class="pdf-modal-card">
+        <header class="pdf-modal-header">
+          <div class="pdf-modal-header-text">
+            <h2 id="pdfPreviewTitle">Report preview</h2>
+            <p id="pdfPreviewSubtitle" class="pdf-modal-subtitle"></p>
+          </div>
+          <button type="button" id="pdfPreviewClose" class="pdf-modal-close" aria-label="Close preview">×</button>
+        </header>
+        <div id="pdfPreviewBody" class="pdf-modal-body"></div>
+        <footer class="pdf-modal-footer">
+          <button type="button" id="pdfPreviewCancel" class="button button-secondary">Cancel</button>
+          <button type="button" id="pdfPreviewConfirm" class="button button-primary">Download PDF</button>
+        </footer>
+      </div>
+    </div>
+
+    <script src="/static/pdf-export.js?v=7"></script>
+    <script src="/static/app.js?v=7"></script>
+  </body>
+</html>
