@@ -9,7 +9,7 @@ This represents the base project setup.
 
 - [System Requirements](#system-requirements)
 - [Configuration](#configuration)
-- [setup and Run](#Project setup)
+- [Setup and Run](#project-setup)
 
 ## System Requirements
 
