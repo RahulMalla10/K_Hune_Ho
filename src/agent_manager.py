@@ -3,7 +3,6 @@ import sys
 from llama_cpp import Llama
 from src.config import config
 
-
 class AgentManager:
     def __init__(self):
         print("Loading LLM (this may take 10-20 seconds)...")
