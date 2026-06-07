@@ -1,4 +1,8 @@
 venv312/
 venv/
 models/
-
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
