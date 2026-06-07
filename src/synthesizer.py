@@ -20,9 +20,9 @@ class Synthesizer:
         timeline = []
         for a in articles:
             if a.get("date"):
-                timeline.append({"date": a["date"], "title": a["title"][:80]})
+                timeline.append({"date": a["date"], "title": a["title"]})
         timeline.sort(key=lambda x: x["date"])
-        return timeline[:10]
+        return timeline
 
     def _rank_predictions(self, data: dict, domain_weight: float) -> list:
         preds = data.get("predictions", [])
